@@ -1,11 +1,11 @@
 <template>
-  <div v-if="(isWeixin || isQQ) && route.path !== '/satloc'" style="text-align: center;">
+  <!--div v-if="(isWeixin || isQQ) && route.path !== '/satloc'" style="text-align: center;">
     <div style="height: 75vh; display: flex; flex-direction: column; align-items: center;">
       <div style="padding: 20px; padding-top: 35vh; font-size: 1.5rem;">如需浏览，请长按网址复制后使用浏览器访问</div>
       <p style="padding: 20px; background-color: #F1F1F1;">{{ link }}</p>
     </div>
     <div style="color: #AAAAAA;">{{ ua }}</div>
-  </div>
+  </div-->
   <t-config-provider v-if="reloadLang && !((isWeixin || isQQ) && route.path !== '/satloc')" :global-config="locale">
     <a-config-provider :locale="locale">
       <router-view />
@@ -22,7 +22,7 @@
   import tdesignEnUS from 'tdesign-vue-next/esm/locale/en_US';
   import GlobalSetting from '@/components/global-setting/index.vue';
   import useLocale from '@/hooks/locale';
-  import Aegis from 'aegis-web-sdk';
+  //import Aegis from 'aegis-web-sdk';
   import { encodingIndexes } from "@zxing/text-encoding/es2015/encoding-indexes";
   import { TextEncoder, TextDecoder } from "@zxing/text-encoding";
   import { useRoute } from 'vue-router';
@@ -34,7 +34,7 @@
   window.TextDecoder = TextDecoder;
 
   // 遥测
-  if(location.hostname == 'k5.vicicode.com' || location.hostname == 'k5.lhw711.cn' || location.hostname == 'mm.md' || location.hostname == 'k5.mm.md'){
+  /*if(location.hostname == 'k5.vicicode.com' || location.hostname == 'k5.lhw711.cn' || location.hostname == 'mm.md' || location.hostname == 'k5.mm.md'){
     const aegis = new Aegis({
         id: 'yr5DeslJkz3Qn20jg0', // 上报 id
         reportApiSpeed: true, // 接口测速
@@ -42,14 +42,14 @@
         spa: true, // spa 应用页面跳转的时候开启 pv 计算
         hostUrl: 'https://rumt-zh.com'
     });
-  }
+  }*/
   
   const { currentLocale } = useLocale();
 
   const reloadLang = ref(true);
-  const ua = navigator.userAgent;
-  const isWeixin = ua.indexOf('MicroMessenger') != -1 ? true : false;
-  const isQQ = ua.indexOf('QQ/') != -1 ? true : false;
+  //const ua = navigator.userAgent;
+  //const isWeixin = ua.indexOf('MicroMessenger') != -1 ? true : false;
+  //const isQQ = ua.indexOf('QQ/') != -1 ? true : false;
   const link = location.href;
 
   const locale = computed(() => {

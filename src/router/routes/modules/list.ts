@@ -31,7 +31,7 @@ const LIST: AppRouteRecordRaw = {
         requiresAuth: true,
         roles: ['*'],
       },
-    },
+    }/*,
     {
       path: 'image',
       name: 'Image',
@@ -71,7 +71,7 @@ const LIST: AppRouteRecordRaw = {
         requiresAuth: true,
         roles: ['*'],
       },
-    }
+    }*/
   ],
 };
 

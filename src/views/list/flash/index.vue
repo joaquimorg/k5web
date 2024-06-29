@@ -30,7 +30,7 @@ const state : {
   binaryName: any,
   binaryFile: any
 } = reactive({
-  status: "点击更新按钮更新固件到设备<br/><br/>",
+  status: "Click the Update button to update the firmware to the device<br/><br/>",
   binaryFile: undefined,
   binaryName: ''
 })
@@ -71,7 +71,7 @@ const selectFile = () => {
 
 const flashIt = async () => {
   if(!state.binaryFile){
-    alert('请选择文件');
+    alert('Please select file');
     return;
   }
   if(appStore.connectPort){
@@ -99,14 +99,14 @@ const flashIt = async () => {
           return Promise.reject(e);
       }
 
-      state.status = state.status + `更新进度 ${((i / firmware.length) * 100).toFixed(1)}%<br/>`
+      state.status = state.status + `Update progress ${((i / firmware.length) * 100).toFixed(1)}%<br/>`
       nextTick(()=>{
         const textarea = document?.getElementById('statusArea');
         if(textarea)textarea.scrollTop = textarea?.scrollHeight;
       })
   }
-  state.status = state.status + "更新进度 100.0%<br/>";
-  state.status = state.status + "固件更新成功";
+  state.status = state.status + "Update progress 100.0%<br/>";
+  state.status = state.status + "Firmware update successful!";
   nextTick(()=>{
     const textarea = document?.getElementById('statusArea');
     if(textarea)textarea.scrollTop = textarea?.scrollHeight;

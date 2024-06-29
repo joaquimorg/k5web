@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <a-result class="result" status="404" :subtitle="'找不到网页'"> </a-result>
+    <a-result class="result" status="404" :subtitle="'Page not found'"> </a-result>
     <div class="operation-row">
-      <a-button key="back" type="primary" @click="back"> 返回 </a-button>
+      <a-button key="back" type="primary" @click="back"> Return </a-button>
     </div>
   </div>
 </template>

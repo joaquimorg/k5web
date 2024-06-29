@@ -748,13 +748,13 @@ const FONT_MAPPING_118_MAP = ['啊', '阿', '埃', '挨', '哎', '唉', '哀', '
 
 async function connect() {
     if (!('serial' in navigator)) {
-        alert('当前浏览器不支持网页串口功能，请使用 Chrome, Edge, Opera 浏览器。');
+        alert('The current browser does not support the web serial port function, please use Chrome, Edge, Opera browser.');
         return null;
     }
 
     try {
         const port = await navigator.serial.requestPort();
-        await port.open({ baudRate: 38400 });
+        await port.open({ baudRate: 115200 });
 
         return port;
     } catch (error) {
