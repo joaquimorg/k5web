@@ -19,10 +19,13 @@ import Updater from "./utils/AutoUpdate.js";
 const AutoUpdate = new Updater()
 AutoUpdate.on('update',()=>{
   setTimeout(async()=>{
-      const result = confirm('The current website has been updated, please click OK to refresh.');
-      if(result){
-        location.reload();
-      }
+    if(process.env.NODE_ENV == 'development'){
+      return
+    }
+    const result = confirm('The current website has been updated, please click OK to refresh.');
+    if(result){
+      location.reload();
+    }
   },500)
 })
 

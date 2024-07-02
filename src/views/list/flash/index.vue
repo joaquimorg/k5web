@@ -4,10 +4,20 @@
     <a-row :gutter="20" align="stretch">
       <a-col :span="24">
         <a-card class="general-card" :title="$t('menu.flash') + $t('global.onBoot')">
-          <a-space>
-            <a-button @click="selectFile">{{ state.binaryFile ? state.binaryName : $t('tool.selectFirmware') }}</a-button>
-            <a-button type="primary" :disabled="!state.binaryFile" @click="flashIt">{{ $t('tool.flash') }}</a-button>
-          </a-space>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <a-space>
+                <a-button @click="selectFile">{{ state.binaryFile ? state.binaryName : $t('tool.selectFirmware') }}</a-button>
+                <a-button type="primary" :disabled="!state.binaryFile" @click="flashIt">{{ $t('tool.flash') }}</a-button>
+              </a-space>
+            </div>
+            <div>
+              <a-radio-group type="button" size="mini" v-model="state.protocol">
+                <a-radio value="Official">Official</a-radio>
+                <a-radio value="Losehu">Losehu</a-radio>
+              </a-radio-group>
+            </div>
+          </div>
           <a-divider />
           <div id="statusArea" style="height: 20em; background-color: azure; color: silver; overflow: auto; padding: 20px"
             v-html="state.status"></div>
@@ -21,18 +31,20 @@
 import { reactive, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAppStore } from '@/store';
-import { disconnect, connect, readPacket, sendPacket, unpackVersion, unpack, flash_generateCommand } from '@/utils/serial.js';
+import { disconnect, connect, readPacket, sendPacket, unpackVersion, unpack, flash_generateCommand, readPacketNoVerify } from '@/utils/serial.js';
 
 const appStore = useAppStore();
 
 const state : {
   status: any,
   binaryName: any,
-  binaryFile: any
+  binaryFile: any,
+  protocol: string
 } = reactive({
   status: "Click the Update button to update the firmware to the device<br/><br/>",
   binaryFile: undefined,
-  binaryName: ''
+  binaryName: '',
+  protocol: 'Official'
 })
 
 const route = useRoute();
@@ -78,11 +90,17 @@ const flashIt = async () => {
     await disconnect(appStore.connectPort);
   }
   let _connect = await connect();
-  await readPacket(_connect, 0x18, 1000);
+  if(state.protocol == 'Official'){
+    await readPacket(_connect, 0x18, 1000);
+  }
   const rawVersion = unpackVersion(state.binaryFile);
   const _data = new Uint8Array([0x30, 0x5, rawVersion.length, 0x0, ...rawVersion]);
-  await sendPacket(_connect, _data);
-  await readPacket(_connect, 0x18)
+
+  if(state.protocol == 'Official'){
+    await sendPacket(_connect, _data);
+    await readPacket(_connect, 0x18);
+  }
+  
   const firmware = unpack(state.binaryFile);
   
   if (firmware.length > 0xefff) throw new Error('Last resort boundary check failed. Whoever touched the code is an idiot.');
@@ -93,7 +111,11 @@ const flashIt = async () => {
 
       try {
           await sendPacket(_connect, command);
-          await readPacket(_connect, 0x1a);
+          if(state.protocol == 'Official'){
+            await readPacket(_connect, 0x1a);
+          }else{
+            await readPacketNoVerify(_connect);
+          }
       } catch (e) {
           console.log('Flash command rejected. Aborting.');
           return Promise.reject(e);
